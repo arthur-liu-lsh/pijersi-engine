@@ -9,53 +9,7 @@ using namespace std;
 
 namespace PijersiEngine::Logic
 {
-    // A vector associating a cell index to the indices of its 1-range neighbours
-    // vector<int> neighbours[45] = {
-    //     vector<int>({1, 6, 7}),
-    //     vector<int>({0, 2, 7, 8}),
-    //     vector<int>({1, 3, 8, 9}),
-    //     vector<int>({2, 4, 9, 10}),
-    //     vector<int>({3, 5, 10, 11}),
-    //     vector<int>({4, 11, 12}),
-    //     vector<int>({0, 7, 13}),
-    //     vector<int>({0, 1, 6, 8, 13, 14}),
-    //     vector<int>({1, 2, 7, 9, 14, 15}),
-    //     vector<int>({2, 3, 8, 10, 15, 16}),
-    //     vector<int>({3, 4, 9, 11, 16, 17}),
-    //     vector<int>({4, 5, 10, 12, 17, 18}),
-    //     vector<int>({5, 11, 18}),
-    //     vector<int>({6, 7, 14, 19, 20}),
-    //     vector<int>({7, 8, 13, 15, 20, 21}),
-    //     vector<int>({8, 9, 14, 16, 21, 22}),
-    //     vector<int>({9, 10, 15, 17, 22, 23}),
-    //     vector<int>({10, 11, 16, 18, 23, 24}),
-    //     vector<int>({11, 12, 17, 24, 25}),
-    //     vector<int>({13, 20, 26}),
-    //     vector<int>({13, 14, 19, 21, 26, 27}),
-    //     vector<int>({14, 15, 20, 22, 27, 28}),
-    //     vector<int>({15, 16, 21, 23, 28, 29}),
-    //     vector<int>({16, 17, 22, 24, 29, 30}),
-    //     vector<int>({17, 18, 23, 25, 30, 31}),
-    //     vector<int>({18, 24, 31}),
-    //     vector<int>({19, 20, 27, 32, 33}),
-    //     vector<int>({20, 21, 26, 28, 33, 34}),
-    //     vector<int>({21, 22, 27, 29, 34, 35}),
-    //     vector<int>({22, 23, 28, 30, 35, 36}),
-    //     vector<int>({23, 24, 29, 31, 36, 37}),
-    //     vector<int>({24, 25, 30, 37, 38}),
-    //     vector<int>({26, 33, 39}),
-    //     vector<int>({26, 27, 32, 34, 39, 40}),
-    //     vector<int>({27, 28, 33, 35, 40, 41}),
-    //     vector<int>({28, 29, 34, 36, 41, 42}),
-    //     vector<int>({29, 30, 35, 37, 42, 43}),
-    //     vector<int>({30, 31, 36, 38, 43, 44}),
-    //     vector<int>({31, 37, 44}),
-    //     vector<int>({32, 33, 40}),
-    //     vector<int>({33, 34, 39, 41}),
-    //     vector<int>({34, 35, 40, 42}),
-    //     vector<int>({35, 36, 41, 43}),
-    //     vector<int>({36, 37, 42, 44}),
-    //     vector<int>({37, 38, 43})};
+    // A bitmask associating a cell index to the indices of its 1-range neighbours
     uint64_t neighbours[45] = {
         194ULL,
         389ULL,
@@ -104,53 +58,7 @@ namespace PijersiEngine::Logic
         9208409882624ULL
     };
 
-    // A vector associating a cell index to the indices of its 2-range neighbours
-    // vector<int> neighbours2[45] = {
-    //     vector<int>({2, 14}),
-    //     vector<int>({3, 13, 15}),
-    //     vector<int>({0, 4, 14, 16}),
-    //     vector<int>({1, 5, 15, 17}),
-    //     vector<int>({2, 16, 18}),
-    //     vector<int>({3, 17}),
-    //     vector<int>({8, 20}),
-    //     vector<int>({9, 19, 21}),
-    //     vector<int>({6, 10, 20, 22}),
-    //     vector<int>({7, 11, 21, 23}),
-    //     vector<int>({8, 12, 22, 24}),
-    //     vector<int>({9, 23, 25}),
-    //     vector<int>({10, 24}),
-    //     vector<int>({1, 15, 27}),
-    //     vector<int>({0, 2, 16, 26, 28}),
-    //     vector<int>({1, 3, 13, 17, 27, 29}),
-    //     vector<int>({2, 4, 14, 18, 28, 30}),
-    //     vector<int>({3, 5, 15, 29, 31}),
-    //     vector<int>({4, 16, 30}),
-    //     vector<int>({7, 21, 33}),
-    //     vector<int>({6, 8, 22, 32, 34}),
-    //     vector<int>({7, 9, 19, 23, 33, 35}),
-    //     vector<int>({8, 10, 20, 24, 34, 36}),
-    //     vector<int>({9, 11, 21, 25, 35, 37}),
-    //     vector<int>({10, 12, 22, 36, 38}),
-    //     vector<int>({11, 23, 37}),
-    //     vector<int>({14, 28, 40}),
-    //     vector<int>({13, 15, 29, 39, 41}),
-    //     vector<int>({14, 16, 26, 30, 40, 42}),
-    //     vector<int>({15, 17, 27, 31, 41, 43}),
-    //     vector<int>({16, 18, 28, 42, 44}),
-    //     vector<int>({17, 29, 43}),
-    //     vector<int>({20, 34}),
-    //     vector<int>({19, 21, 35}),
-    //     vector<int>({20, 22, 32, 36}),
-    //     vector<int>({21, 23, 33, 37}),
-    //     vector<int>({22, 24, 34, 38}),
-    //     vector<int>({23, 25, 35}),
-    //     vector<int>({24, 36}),
-    //     vector<int>({27, 41}),
-    //     vector<int>({26, 28, 42}),
-    //     vector<int>({27, 29, 39, 43}),
-    //     vector<int>({28, 30, 40, 44}),
-    //     vector<int>({29, 31, 41}),
-    //     vector<int>({30, 42})};
+    // A bitmask associating a cell index to the indices of its 2-range neighbours
     uint64_t neighbours2[45] = {
         16388ULL,
         40968ULL,
@@ -314,7 +222,7 @@ namespace PijersiEngine::Logic
     }
 
     // Convert a native triple-index move into the string (a1-b1=c1 style) format.
-    string moveToString(int move[3], uint8_t cells[45])
+    string moveToString(int move[3], uint64_t pieces[18])
     {
         int indexStart = move[0];
         int indexMid = move[1];
@@ -333,9 +241,9 @@ namespace PijersiEngine::Logic
             {
                 moveString += "-" + indexToString(indexEnd);
             }
-            else if (cells[indexStart] >= 16)
+            else if (pieces[indexStart] >= 16)
             {
-                if (cells[indexMid] != 0 && (cells[indexMid] & 2) == (cells[indexStart] & 2))
+                if (pieces[indexMid] != 0 && (pieces[indexMid] & 2) == (pieces[indexStart] & 2))
                 {
                     moveString += "-" + indexToString(indexMid) + "=" + indexToString(indexEnd);
                 }
@@ -351,7 +259,7 @@ namespace PijersiEngine::Logic
         }
         else
         {
-            if (cells[indexStart] >= 16)
+            if (pieces[indexStart] >= 16)
             {
                 moveString += "=" + indexToString(indexEnd);
             }
@@ -364,7 +272,7 @@ namespace PijersiEngine::Logic
     }
 
     // Converts a string (a1-b1=c1 style) move to the native triple-index format
-    vector<int> stringToMove(string moveString, uint8_t cells[45])
+    vector<int> stringToMove(string moveString, uint64_t pieces[18])
     {
         vector<int> move(3, -1);
         if(moveString.size() == 5)
@@ -373,7 +281,7 @@ namespace PijersiEngine::Logic
             move[2] = stringToIndex(moveString.substr(3, 2));
             if (moveString[2] == '-')
             {
-                if (cells[move[0]] >= 16 || ((cells[move[0]] & 2) == (cells[move[1]] & 2)))
+                if (pieces[move[0]] >= 16 || ((pieces[move[0]] & 2) == (pieces[move[1]] & 2)))
                 {
                     move[1] = move[0];
                 }
@@ -393,14 +301,14 @@ namespace PijersiEngine::Logic
     }
 
     // Subroutine of the perft debug function that is ran by the main perft() function
-    uint64_t _perftIter(int recursionDepth, uint8_t cells[45], uint8_t currentPlayer)
+    uint64_t _perftIter(int recursionDepth, uint64_t pieces[18], uint8_t currentPlayer)
     {
-        if (isWin(cells))
+        if (isWin(pieces))
         {
             return 0ULL;
         }
         // Get a vector of all the available moves for the current player
-        vector<int> moves = availablePlayerMoves(currentPlayer, cells);
+        vector<int> moves = availablePlayerMoves(currentPlayer, pieces);
         size_t nMoves = moves.size() / 3;
         if (recursionDepth == 1)
         {
@@ -409,10 +317,10 @@ namespace PijersiEngine::Logic
 
         uint64_t sum = 0ULL;
 
-        uint8_t newCells[45];
+        uint64_t newCells[18];
         for (size_t k = 0; k < nMoves; k++)
         {
-            setState(newCells, cells);
+            setState(newCells, pieces);
             playManual(moves.data() + 3 * k, newCells);
             sum += _perftIter(recursionDepth - 1, newCells, 1 - currentPlayer);
         }
@@ -420,24 +328,24 @@ namespace PijersiEngine::Logic
     }
 
     // Perft debug function to measure the number of leaf nodes (possible moves) at a given depth
-    uint64_t perft(int recursionDepth, uint8_t cells[45], uint8_t currentPlayer)
+    uint64_t perft(int recursionDepth, uint64_t pieces[18], uint8_t currentPlayer)
     {
         if (recursionDepth == 0)
         {
             return 1ULL;
         }
-        else if (isWin(cells))
+        else if (isWin(pieces))
         {
             return 0ULL;
         }
         else if (recursionDepth == 1)
         {
-            return _perftIter(1, cells, currentPlayer);
+            return _perftIter(1, pieces, currentPlayer);
         }
         else
         {
             // Get a vector of all the available moves for the current player
-            vector<int> moves = availablePlayerMoves(currentPlayer, cells);
+            vector<int> moves = availablePlayerMoves(currentPlayer, pieces);
             size_t nMoves = moves.size() / 3;
 
             uint64_t sum = 0ULL;
@@ -445,8 +353,8 @@ namespace PijersiEngine::Logic
                                                      : sum)
             for (size_t k = 0; k < nMoves; k++)
             {
-                uint8_t newCells[45];
-                setState(newCells, cells);
+                uint64_t newCells[18];
+                setState(newCells, pieces);
                 playManual(moves.data() + 3 * k, newCells);
                 sum += _perftIter(recursionDepth - 1, newCells, 1 - currentPlayer);
             }
@@ -454,10 +362,10 @@ namespace PijersiEngine::Logic
         }
     }
 
-    vector<string> perftSplit(int recursionDepth, uint8_t cells[45], uint8_t currentPlayer)
+    vector<string> perftSplit(int recursionDepth, uint64_t pieces[18], uint8_t currentPlayer)
     {
         vector<string> results;
-        if (recursionDepth == 0 || isWin(cells))
+        if (recursionDepth == 0 || isWin(pieces))
         {
             return results;
         }
@@ -465,13 +373,13 @@ namespace PijersiEngine::Logic
         results.reserve(256);
 
         // Get a vector of all the available moves for the current player
-        vector<int> moves = availablePlayerMoves(currentPlayer, cells);
+        vector<int> moves = availablePlayerMoves(currentPlayer, pieces);
         size_t nMoves = moves.size() / 3;
 
         // Converts all those moves to string format
         for (size_t k = 0; k < nMoves; k++)
         {
-            results.push_back(moveToString(moves.data() + 3 * k, cells));
+            results.push_back(moveToString(moves.data() + 3 * k, pieces));
         }
 
         if (recursionDepth == 1)
@@ -485,8 +393,8 @@ namespace PijersiEngine::Logic
             #pragma omp parallel for schedule(dynamic)
             for (size_t k = 0; k < nMoves; k++)
             {
-                uint8_t newCells[45];
-                setState(newCells, cells);
+                uint64_t newCells[18];
+                setState(newCells, pieces);
                 playManual(moves.data() + 3 * k, newCells);
                 results[k] += ": " + to_string(_perftIter(recursionDepth - 1, newCells, 1 - currentPlayer));
             }
@@ -495,64 +403,64 @@ namespace PijersiEngine::Logic
     }
 
     // Copy the data from origin to target
-    void setState(uint8_t target[45], const uint8_t origin[45])
+    void setState(uint64_t target[18], const uint64_t origin[18])
     {
-        copy(origin, origin+45, target);
+        copy(origin, origin+18, target);
     }
 
     // Plays the selected move
-    void play(int indexStart, int indexMid, int indexEnd, uint8_t cells[45])
+    void play(int indexStart, int indexMid, int indexEnd, uint64_t pieces[18])
     {
         if (indexStart < 0)
         {
             return;
         }
-        uint8_t movingPiece = cells[indexStart];
+        uint8_t movingPiece = pieces[indexStart];
         if (movingPiece != 0)
         {
             // If there is no intermediate move
             if (indexMid < 0)
             {
                 // Simple move
-                move(indexStart, indexEnd, cells);
+                move(indexStart, indexEnd, pieces);
             }
             // There is an intermediate move
             else
             {
-                uint8_t midPiece = cells[indexMid];
-                uint8_t endPiece = cells[indexEnd];
+                uint8_t midPiece = pieces[indexMid];
+                uint8_t endPiece = pieces[indexEnd];
                 // The piece at the mid coordinates is an ally : stack and move
                 if (midPiece != 0 && (midPiece & 2) == (movingPiece & 2) && (indexMid != indexStart))
                 {
-                    stack(indexStart, indexMid, cells);
-                    move(indexMid, indexEnd, cells);
+                    stack(indexStart, indexMid, pieces);
+                    move(indexMid, indexEnd, pieces);
                 }
                 // The piece at the end coordinates is an ally : move and stack
                 else if (endPiece != 0 && (endPiece & 2) == (movingPiece & 2))
                 {
-                    move(indexStart, indexMid, cells);
-                    stack(indexMid, indexEnd, cells);
+                    move(indexStart, indexMid, pieces);
+                    stack(indexMid, indexEnd, pieces);
                 }
                 // The end coordinates contain an enemy or no piece : move and unstack
                 else
                 {
-                    move(indexStart, indexMid, cells);
-                    unstack(indexMid, indexEnd, cells);
+                    move(indexStart, indexMid, pieces);
+                    unstack(indexMid, indexEnd, pieces);
                 }
             }
         }
     }
 
-    void playManual(int move[3], uint8_t cells[45])
+    void playManual(int move[3], uint64_t pieces[18])
     {
-        play(move[0], move[1], move[2], cells);
+        play(move[0], move[1], move[2], pieces);
     }
 
     // Generates a random move
-    vector<int> ponderRandom(uint8_t cells[45], uint8_t currentPlayer)
+    vector<int> ponderRandom(uint64_t pieces[18], uint8_t currentPlayer)
     {
         // Get a vector of all the available moves for the current player
-        vector<int> moves = availablePlayerMoves(currentPlayer, cells);
+        vector<int> moves = availablePlayerMoves(currentPlayer, pieces);
 
         if (moves.size() > 0)
         {
@@ -569,183 +477,161 @@ namespace PijersiEngine::Logic
     }
 
     // Plays a random move
-    vector<int> playRandom(uint8_t cells[45], uint8_t currentPlayer)
+    vector<int> playRandom(uint64_t pieces[18], uint8_t currentPlayer)
     {
-        vector<int> move = ponderRandom(cells, currentPlayer);
+        vector<int> move = ponderRandom(pieces, currentPlayer);
         // Apply move
-        playManual(move.data(), cells);
+        playManual(move.data(), pieces);
 
         return move;
     }
 
     // Returns true if the board is in a winning position
-    bool isWin(const uint8_t cells[45])
+    bool isWin(const uint64_t pieces[18])
     {
-        for (int k = 0; k < 6; k++)
-        {
-            if (cells[k] != 0)
-            {
-                // If piece is White and not Wise
-                if ((cells[k] & 2) == 0 && (cells[k] & 12) != 12)
-                {
-                    return true;
-                }
-            }
-        }
-        for (int k = 39; k < 45; k++)
-        {
-            if (cells[k] != 0)
-            {
-                // If piece is Black and not Wise
-                if ((cells[k] & 2) == 2 && (cells[k] & 12) != 12)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return (pieces[8] & 63) != 0 || (pieces[17] & 34634616274944ULL) != 0;
     }
 
     // Returns the list of possible moves for a specific piece
-    vector<int> availablePieceMoves(int indexStart, uint8_t cells[45])
+    vector<int> availablePieceMoves(int indexStart, uint64_t pieces[18])
     {
-        uint8_t movingPiece = cells[indexStart];
+        uint8_t movingPiece = pieces[indexStart];
 
         vector<int> moves = vector<int>();
         moves.reserve(128);
 
-        // If the piece is not a stack
-        if (movingPiece < 16)
-        {
-            // 1-range first action
-            for (int indexMid : neighbours[indexStart])
-            {
-                // stack, [1/2-range move] optional
-                if (isStackValid(movingPiece, indexMid, cells))
-                {
-                    // stack, 2-range move
-                    for (int indexEnd : neighbours2[indexMid])
-                    {
-                        if (isMove2Valid(movingPiece, indexMid, indexEnd, cells) || ((indexStart == (indexMid + indexEnd) / 2) && isMoveValid(movingPiece, indexEnd, cells)))
-                        {
-                            moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
-                        }
-                    }
+        // // If the piece is not a stack
+        // if (movingPiece < 16)
+        // {
+        //     // 1-range first action
+        //     for (int indexMid : neighbours[indexStart])
+        //     {
+        //         // stack, [1/2-range move] optional
+        //         if (isStackValid(movingPiece, indexMid, pieces))
+        //         {
+        //             // stack, 2-range move
+        //             for (int indexEnd : neighbours2[indexMid])
+        //             {
+        //                 if (isMove2Valid(movingPiece, indexMid, indexEnd, pieces) || ((indexStart == (indexMid + indexEnd) / 2) && isMoveValid(movingPiece, indexEnd, pieces)))
+        //                 {
+        //                     moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
+        //                 }
+        //             }
 
-                    // stack, 0/1-range move
-                    for (int indexEnd : neighbours[indexMid])
-                    {
-                        if (isMoveValid(movingPiece, indexEnd, cells) || (indexStart == indexEnd))
-                        {
-                            moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
-                        }
-                    }
+        //             // stack, 0/1-range move
+        //             for (int indexEnd : neighbours[indexMid])
+        //             {
+        //                 if (isMoveValid(movingPiece, indexEnd, pieces) || (indexStart == indexEnd))
+        //                 {
+        //                     moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
+        //                 }
+        //             }
 
-                    // stack only
-                    moves.insert(moves.end(), {indexStart, indexStart, indexMid});
-                }
-                // 1-range move
-                if (isMoveValid(movingPiece, indexMid, cells))
-                {
-                    moves.insert(moves.end(), {indexStart, -1, indexMid});
-                }
-            }
-        }
-        else
-        {
-            // 2 range first action
-            for (int indexMid : neighbours2[indexStart])
-            {
-                if (isMove2Valid(movingPiece, indexStart, indexMid, cells))
-                {
-                    // 2-range move, stack or unstack
-                    for (int indexEnd : neighbours[indexMid])
-                    {
-                        // 2-range move, unstack
-                        if (isUnstackValid(movingPiece, indexEnd, cells))
-                        {
-                            moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
-                        }
+        //             // stack only
+        //             moves.insert(moves.end(), {indexStart, indexStart, indexMid});
+        //         }
+        //         // 1-range move
+        //         if (isMoveValid(movingPiece, indexMid, pieces))
+        //         {
+        //             moves.insert(moves.end(), {indexStart, -1, indexMid});
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     // 2 range first action
+        //     for (int indexMid : neighbours2[indexStart])
+        //     {
+        //         if (isMove2Valid(movingPiece, indexStart, indexMid, pieces))
+        //         {
+        //             // 2-range move, stack or unstack
+        //             for (int indexEnd : neighbours[indexMid])
+        //             {
+        //                 // 2-range move, unstack
+        //                 if (isUnstackValid(movingPiece, indexEnd, pieces))
+        //                 {
+        //                     moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
+        //                 }
 
-                        // 2-range move, stack
-                        if (isStackValid(movingPiece, indexEnd, cells))
-                        {
-                            moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
-                        }
-                    }
+        //                 // 2-range move, stack
+        //                 if (isStackValid(movingPiece, indexEnd, pieces))
+        //                 {
+        //                     moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
+        //                 }
+        //             }
 
-                    // 2-range move
-                    moves.insert(moves.end(), {indexStart, -1, indexMid});
-                }
-            }
-            // 1-range first action
-            for (int indexMid : neighbours[indexStart])
-            {
+        //             // 2-range move
+        //             moves.insert(moves.end(), {indexStart, -1, indexMid});
+        //         }
+        //     }
+        //     // 1-range first action
+        //     for (int indexMid : neighbours[indexStart])
+        //     {
 
-                // 1-range move, [stack or unstack] optional
-                if (isMoveValid(movingPiece, indexMid, cells))
-                {
+        //         // 1-range move, [stack or unstack] optional
+        //         if (isMoveValid(movingPiece, indexMid, pieces))
+        //         {
 
-                    // 1-range move, stack or unstack
-                    for (int indexEnd : neighbours[indexMid])
-                    {
-                        // 1-range move, unstack
-                        if (isUnstackValid(movingPiece, indexEnd, cells))
-                        {
-                            moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
-                        }
+        //             // 1-range move, stack or unstack
+        //             for (int indexEnd : neighbours[indexMid])
+        //             {
+        //                 // 1-range move, unstack
+        //                 if (isUnstackValid(movingPiece, indexEnd, pieces))
+        //                 {
+        //                     moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
+        //                 }
 
-                        // 1-range move, stack
-                        if (isStackValid(movingPiece, indexEnd, cells))
-                        {
-                            moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
-                        }
-                    }
-                    // 1-range move, unstack on starting position
-                    moves.insert(moves.end(), {indexStart, indexMid, indexStart});
+        //                 // 1-range move, stack
+        //                 if (isStackValid(movingPiece, indexEnd, pieces))
+        //                 {
+        //                     moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
+        //                 }
+        //             }
+        //             // 1-range move, unstack on starting position
+        //             moves.insert(moves.end(), {indexStart, indexMid, indexStart});
 
-                    // 1-range move
-                    moves.insert(moves.end(), {indexStart, -1, indexMid});
-                }
-                // stack, [1/2-range move] optional
-                if (isStackValid(movingPiece, indexMid, cells))
-                {
-                    // stack, 2-range move
-                    for (int indexEnd : neighbours2[indexMid])
-                    {
-                        if (isMove2Valid(movingPiece, indexMid, indexEnd, cells))
-                        {
-                            moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
-                        }
-                    }
+        //             // 1-range move
+        //             moves.insert(moves.end(), {indexStart, -1, indexMid});
+        //         }
+        //         // stack, [1/2-range move] optional
+        //         if (isStackValid(movingPiece, indexMid, pieces))
+        //         {
+        //             // stack, 2-range move
+        //             for (int indexEnd : neighbours2[indexMid])
+        //             {
+        //                 if (isMove2Valid(movingPiece, indexMid, indexEnd, pieces))
+        //                 {
+        //                     moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
+        //                 }
+        //             }
 
-                    // stack, 1-range move
-                    for (int indexEnd : neighbours[indexMid])
-                    {
-                        if (isMoveValid(movingPiece, indexEnd, cells))
-                        {
-                            moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
-                        }
-                    }
+        //             // stack, 1-range move
+        //             for (int indexEnd : neighbours[indexMid])
+        //             {
+        //                 if (isMoveValid(movingPiece, indexEnd, pieces))
+        //                 {
+        //                     moves.insert(moves.end(), {indexStart, indexMid, indexEnd});
+        //                 }
+        //             }
 
-                    // stack only
-                    moves.insert(moves.end(), {indexStart, indexStart, indexMid});
-                }
+        //             // stack only
+        //             moves.insert(moves.end(), {indexStart, indexStart, indexMid});
+        //         }
 
-                // unstack
-                if (isUnstackValid(movingPiece, indexMid, cells))
-                {
-                    // unstack only
-                    moves.insert(moves.end(), {indexStart, indexStart, indexMid});
-                }
-            }
-        }
+        //         // unstack
+        //         if (isUnstackValid(movingPiece, indexMid, pieces))
+        //         {
+        //             // unstack only
+        //             moves.insert(moves.end(), {indexStart, indexStart, indexMid});
+        //         }
+        //     }
+        // }
 
         return moves;
     }
 
     // Returns the list of possible moves for a player
-    vector<int> availablePlayerMoves(uint8_t player, uint8_t cells[45])
+    vector<int> availablePlayerMoves(uint8_t player, uint64_t pieces[18])
     {
         vector<int> moves = vector<int>();
         // Reserve space in vector for optimization purposes
@@ -753,12 +639,12 @@ namespace PijersiEngine::Logic
         // Calculate possible moves
         for (int index = 0; index < 45; index++)
         {
-            if (cells[index] != 0)
+            if (pieces[index] != 0)
             {
                 // Choose pieces of the current player's colour
-                if ((cells[index] & 2) == (player << 1))
+                if ((pieces[index] & 2) == (player << 1))
                 {
-                    vector<int> pieceMoves = availablePieceMoves(index, cells);
+                    vector<int> pieceMoves = availablePieceMoves(index, pieces);
                     moves.insert(moves.end(), pieceMoves.begin(), pieceMoves.end());
                 }
             }
@@ -780,56 +666,56 @@ namespace PijersiEngine::Logic
     }
 
     // Applies a move between chosen coordinates
-    void move(int indexStart, int indexEnd, uint8_t cells[45])
+    void move(int indexStart, int indexEnd, uint64_t pieces[18])
     {
         // Do nothing if start and end coordinate are identical
         if (indexStart != indexEnd)
         {
             // Move the piece to the target cell
-            cells[indexEnd] = cells[indexStart];
+            pieces[indexEnd] = pieces[indexStart];
 
             // Set the starting cell as empty
-            cells[indexStart] = 0;
+            pieces[indexStart] = 0;
         }
     }
 
     // Applies a stack between chosen coordinates
-    void stack(int indexStart, int indexEnd, uint8_t cells[45])
+    void stack(int indexStart, int indexEnd, uint64_t pieces[18])
     {
-        uint8_t movingPiece = cells[indexStart];
-        uint8_t endPiece = cells[indexEnd];
+        uint8_t movingPiece = pieces[indexStart];
+        uint8_t endPiece = pieces[indexEnd];
 
         // If the moving piece is already on top of a stack, leave the bottom piece in the starting cell
-        cells[indexStart] = (movingPiece >> 4);
+        pieces[indexStart] = (movingPiece >> 4);
 
         // Move the top piece to the target cell and set its new bottom piece
-        cells[indexEnd] = (movingPiece & 15) + (endPiece << 4);
+        pieces[indexEnd] = (movingPiece & 15) + (endPiece << 4);
     }
 
     // Applies an unstack between chosen coordinates
-    void unstack(int indexStart, int indexEnd, uint8_t cells[45])
+    void unstack(int indexStart, int indexEnd, uint64_t pieces[18])
     {
-        uint8_t movingPiece = cells[indexStart];
+        uint8_t movingPiece = pieces[indexStart];
 
         // Leave the bottom piece in the starting cell
-        cells[indexStart] = (movingPiece >> 4);
+        pieces[indexStart] = (movingPiece >> 4);
         // Remove the bottom piece from the moving piece
         // Move the top piece to the target cell
         // Will overwrite the eaten piece if there is one
-        cells[indexEnd] = (movingPiece & 15);
+        pieces[indexEnd] = (movingPiece & 15);
     }
 
     // Returns whether a certain 1-range move is possible
-    bool isMoveValid(uint8_t movingPiece, int indexEnd, uint8_t cells[45])
+    bool isMoveValid(uint8_t movingPiece, int indexEnd, uint64_t pieces[18])
     {
-        if (cells[indexEnd] != 0)
+        if (pieces[indexEnd] != 0)
         {
             // If the end piece and the moving piece are the same colour
-            if ((cells[indexEnd] & 2) == (movingPiece & 2))
+            if ((pieces[indexEnd] & 2) == (movingPiece & 2))
             {
                 return false;
             }
-            if (!canTake(movingPiece, cells[indexEnd]))
+            if (!canTake(movingPiece, pieces[indexEnd]))
             {
                 return false;
             }
@@ -838,21 +724,21 @@ namespace PijersiEngine::Logic
     }
 
     // Returns whether a certain 2-range move is possible
-    bool isMove2Valid(uint8_t movingPiece, int indexStart, int indexEnd, uint8_t cells[45])
+    bool isMove2Valid(uint8_t movingPiece, int indexStart, int indexEnd, uint64_t pieces[18])
     {
         // If there is a piece blocking the move (cell between the start and end positions)
-        if (cells[(indexEnd + indexStart) / 2] != 0)
+        if (pieces[(indexEnd + indexStart) / 2] != 0)
         {
             return false;
         }
-        if (cells[indexEnd] != 0)
+        if (pieces[indexEnd] != 0)
         {
             // If the end piece and the moving piece are the same colour
-            if ((cells[indexEnd] & 2) == (movingPiece & 2))
+            if ((pieces[indexEnd] & 2) == (movingPiece & 2))
             {
                 return false;
             }
-            if (!canTake(movingPiece, cells[indexEnd]))
+            if (!canTake(movingPiece, pieces[indexEnd]))
             {
                 return false;
             }
@@ -861,15 +747,15 @@ namespace PijersiEngine::Logic
     }
 
     // Returns whether a certain stack action is possible
-    bool isStackValid(uint8_t movingPiece, int indexEnd, const uint8_t cells[45])
+    bool isStackValid(uint8_t movingPiece, int indexEnd, const uint64_t pieces[18])
     {
         // If the end cell is not empty
         // If the target piece and the moving piece are the same colour
         // If the end piece is not a stack
-        if ((cells[indexEnd] != 0) && ((cells[indexEnd] & 2) == (movingPiece & 2)) && (cells[indexEnd] < 16))
+        if ((pieces[indexEnd] != 0) && ((pieces[indexEnd] & 2) == (movingPiece & 2)) && (pieces[indexEnd] < 16))
         {
             // If the upper piece is Wise and the target piece is not Wise
-            if ((movingPiece & 12) == 12 && (cells[indexEnd] & 12) != 12)
+            if ((movingPiece & 12) == 12 && (pieces[indexEnd] & 12) != 12)
             {
                 return false;
             }
@@ -879,16 +765,16 @@ namespace PijersiEngine::Logic
     }
 
     // Returns whether a certain unstack action is possible
-    bool isUnstackValid(uint8_t movingPiece, int indexEnd, uint8_t cells[45])
+    bool isUnstackValid(uint8_t movingPiece, int indexEnd, uint64_t pieces[18])
     {
-        if (cells[indexEnd] != 0)
+        if (pieces[indexEnd] != 0)
         {
-            // If the cells are the same colour
-            if ((cells[indexEnd] & 2) == (movingPiece & 2))
+            // If the pieces are the same colour
+            if ((pieces[indexEnd] & 2) == (movingPiece & 2))
             {
                 return false;
             }
-            if (!canTake(movingPiece, cells[indexEnd]))
+            if (!canTake(movingPiece, pieces[indexEnd]))
             {
                 return false;
             }

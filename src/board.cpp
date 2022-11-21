@@ -13,54 +13,22 @@
 
 using namespace std;
 
-
 namespace PijersiEngine
 {
-
-
-    // Adds a bottom piece to the selected piece
-    uint8_t addBottom(uint8_t piece, uint8_t newBottom)
-    {
-        return piece + (newBottom << 4);
-    }
-
-    // Creates a piece of chosen colour and type
-    uint8_t createPiece(PieceColour colour, PieceType type)
-    {
-        uint8_t piece = 1;
-        if (colour == Black) {
-            piece += 2;
-        }
-        switch (type)
-        {
-            case Scissors:
-                break;
-            case Paper:
-                piece += 4;
-                break;
-            case Rock:
-                piece += 8;
-                break;
-            case Wise:
-                piece += 12;
-                break;
-        }
-        return piece;
-    }
 
     // Board constructor
     Board::Board()
     {
-        for (int k = 0; k < 45; k++)
+        for (int k = 0; k < 18; k++)
         {
-            cells[k] = 0;
+            pieces[k] = 0ULL;
         }
     }
 
     // Board copy constructor
     Board::Board(Board &board)
     {
-        setState(board.cells);
+        setState(board.pieces);
         currentPlayer = board.currentPlayer;
     }
 
@@ -74,41 +42,41 @@ namespace PijersiEngine
         return move;
     }
 
-    vector<int> Board::ponderAlphaBeta(int recursionDepth, bool random)
-    {
-        return AlphaBeta::ponderAlphaBeta(recursionDepth, random, cells, currentPlayer);
-    }
+    // vector<int> Board::ponderAlphaBeta(int recursionDepth, bool random)
+    // {
+    //     return AlphaBeta::ponderAlphaBeta(recursionDepth, random, cells, currentPlayer);
+    // }
 
     // Chooses a random move
     vector<int> Board::ponderRandom()
     {
-        return Logic::ponderRandom(cells, currentPlayer);
+        return Logic::ponderRandom(pieces, currentPlayer);
     }
 
     // Plays a random move and returns it
     vector<int> Board::playRandom()
     {
-        return Logic::playRandom(cells, currentPlayer);
+        return Logic::playRandom(pieces, currentPlayer);
     }
 
     bool Board::isMoveLegal(vector<int> move)
     {
-        if (cells[move[0]] == 0)
+        if (pieces[move[0]] == 0)
         {
             return false;
         }
-        if ((cells[move[0]] & 2) != currentPlayer << 1)
+        if ((pieces[move[0]] & 2) != currentPlayer << 1)
         {
             return false;
         }
-        vector<int> moves = Logic::availablePieceMoves(move[0], cells);
-        size_t nMoves = moves.size()/3;
+        vector<int> moves = Logic::availablePieceMoves(move[0], pieces);
+        size_t nMoves = moves.size() / 3;
         for (size_t k = 0; k < nMoves; k++)
         {
             bool legal = true;
             for (int m = 0; m < 3; m++)
             {
-                if (moves[k*3+m] != move[m])
+                if (moves[k * 3 + m] != move[m])
                 {
                     legal = false;
                 }
@@ -121,137 +89,132 @@ namespace PijersiEngine
         return false;
     }
 
-
-
-
-
     void Board::playManual(vector<int> move)
     {
-        Logic::play(move[0], move[1], move[2], cells);
+        Logic::play(move[0], move[1], move[2], pieces);
         // Set current player to the other colour.
         currentPlayer = 1 - currentPlayer;
     }
 
     uint8_t Board::at(int i, int j)
     {
-        return cells[Logic::coordsToIndex(i, j)];
+        return pieces[Logic::coordsToIndex(i, j)];
     }
 
-    int16_t Board::evaluate()
-    {
-        return AlphaBeta::evaluatePosition(cells);
-    }
+    // int16_t Board::evaluate()
+    // {
+    //     return AlphaBeta::evaluatePosition(pieces);
+    // }
 
     // Adds a piece to the designated coordinates
-    void Board::addPiece(uint8_t piece, int i, int j)
+    void Board::addPiece(PieceColour colour, PieceType type, bool bottom, int i, int j)
     {
-        cells[Logic::coordsToIndex(i, j)] = piece;
+        int n = (colour == White) ? 0 : 1;
+        int m = -1;
+        int o = bottom ? 1 : 0;
+        switch (type)
+        {
+        case Scissors:
+            m = 0;
+            break;
+        case Paper:
+            m = 1;
+            break;
+        case Rock:
+            m = 2;
+            break;
+        case Wise:
+            m = 3;
+            break;
+        }
+        pieces[8*n + m + 4 * o] |= (1ULL << Logic::coordsToIndex(i,j));
+        if (!bottom)
+        {
+            pieces[16 + n] |= (1ULL << Logic::coordsToIndex(i,j));
+        }
     }
 
     // Sets the board to a chosen state
-    void Board::setState(uint8_t newState[45])
+    void Board::setState(uint64_t newState[18])
     {
-        Logic::setState(cells, newState);
+        Logic::setState(pieces, newState);
     }
 
-    uint8_t *Board::getState()
+    uint64_t *Board::getState()
     {
-        return cells;
+        return pieces;
     }
 
     // Initializes the board to the starting position
     void Board::init()
     {
         // Reset board
-        for (int k = 0; k < 45; k++)
+        for (int k = 0; k < 18; k++)
         {
-            cells[k] = 0;
+            pieces[k] = 0ULL;
         }
 
         // Black pieces
-        addPiece(createPiece(Black, Scissors), 0, 0);
-        addPiece(createPiece(Black, Paper), 0, 1);
-        addPiece(createPiece(Black, Rock), 0, 2);
-        addPiece(createPiece(Black, Scissors), 0, 3);
-        addPiece(createPiece(Black, Paper), 0, 4);
-        addPiece(createPiece(Black, Rock), 0, 5);
-        addPiece(createPiece(Black, Paper), 1, 0);
-        addPiece(createPiece(Black, Rock), 1, 1);
-        addPiece(createPiece(Black, Scissors), 1, 2);
-        addPiece(addBottom(createPiece(Black, Wise),createPiece(Black, Wise)), 1, 3);
-        addPiece(createPiece(Black, Rock), 1, 4);
-        addPiece(createPiece(Black, Scissors), 1, 5);
-        addPiece(createPiece(Black, Paper), 1, 6);
+        addPiece(Black, Scissors, false, 0, 0);
+        addPiece(Black, Paper, false, 0, 1);
+        addPiece(Black, Rock, false, 0, 2);
+        addPiece(Black, Scissors, false, 0, 3);
+        addPiece(Black, Paper, false, 0, 4);
+        addPiece(Black, Rock, false, 0, 5);
+        addPiece(Black, Paper, false, 1, 0);
+        addPiece(Black, Rock, false, 1, 1);
+        addPiece(Black, Scissors, false, 1, 2);
+        addPiece(Black, Wise, false, 1, 3);
+        addPiece(Black, Wise, true, 1, 3);
+        addPiece(Black, Rock, false, 1, 4);
+        addPiece(Black, Scissors, false, 1, 5);
+        addPiece(Black, Paper, false, 1, 6);
 
         // White pieces
-        addPiece(createPiece(White, Paper), 5, 0);
-        addPiece(createPiece(White, Scissors), 5, 1);
-        addPiece(createPiece(White, Rock), 5, 2);
-        addPiece(addBottom(createPiece(White, Wise),createPiece(White, Wise)), 5, 3);
-        addPiece(createPiece(White, Scissors), 5, 4);
-        addPiece(createPiece(White, Rock), 5, 5);
-        addPiece(createPiece(White, Paper), 5, 6);
-        addPiece(createPiece(White, Rock), 6, 0);
-        addPiece(createPiece(White, Paper), 6, 1);
-        addPiece(createPiece(White, Scissors), 6, 2);
-        addPiece(createPiece(White, Rock), 6, 3);
-        addPiece(createPiece(White, Paper), 6, 4);
-        addPiece(createPiece(White, Scissors), 6, 5);
+        addPiece(White, Paper, false, 5, 0);
+        addPiece(White, Scissors, false, 5, 1);
+        addPiece(White, Rock, false, 5, 2);
+        addPiece(White, Wise, false, 5, 3);
+        addPiece(White, Wise, true, 5, 3);
+        addPiece(White, Scissors, false, 5, 4);
+        addPiece(White, Rock, false, 5, 5);
+        addPiece(White, Paper, false, 5, 6);
+        addPiece(White, Rock, false, 6, 0);
+        addPiece(White, Paper, false, 6, 1);
+        addPiece(White, Scissors, false, 6, 2);
+        addPiece(White, Rock, false, 6, 3);
+        addPiece(White, Paper, false, 6, 4);
+        addPiece(White, Scissors, false, 6, 5);
 
         // Set active player to White
         currentPlayer = 0;
     }
 
-    // Converts a piece to char format
-    // Used for debug purposes
-    char _pieceToChar(uint8_t piece)
+    string pieceLetters = "SPRWsprw";
+
+    char _indexToChar(uint64_t pieces[18], int index, bool bottom)
     {
-        char res = ' ';
-        // If the piece is White
-        if ((piece & 2) == 0)
+        char output = ' ';
+        int offset = bottom ? 4 : 0;
+        uint64_t mask = 1ULL << index;
+        for (int k = 0; k < 4; k++)
         {
-            // Read the piece's type
-            switch (piece & 12)
+            if ((pieces[k + offset] & mask) != 0)
             {
-            case 0:
-                res = 'S';
-                break;
-            case 4:
-                res = 'P';
-                break;
-            case 8:
-                res = 'R';
-                break;
-            case 12:
-                res = 'W';
-                break;
-            default:
-                break;
+                output = pieceLetters[k];
+                return output;
             }
         }
-        // If the piece is Black
-        else if ((piece & 2) == 2)
+        
+        for (int k = 0; k < 4; k++)
         {
-            // Read the piece's type
-            switch (piece & 12)
+            if ((pieces[8 + k + offset] & mask) != 0)
             {
-            case 0:
-                res = 's';
-                break;
-            case 4:
-                res = 'p';
-                break;
-            case 8:
-                res = 'r';
-                break;
-            case 12:
-                res = 'w';
-                break;
-            default:
-                break;
+                output = pieceLetters[4 + k];
+                return output;
             }
         }
-        return res;
+        return output;
     }
 
     // Prints the board
@@ -273,18 +236,9 @@ namespace PijersiEngine
                 output += ' ';
                 for (int j = 0; j < 6; j++)
                 {
-                    char char1 = '.';
-                    char char2 = ' ';
-                    uint8_t piece = cells[Logic::coordsToIndex(i, j)];
-                    if (piece != 0)
-                    {
-                        char1 = _pieceToChar(piece);
-                        // If the piece is a stack
-                        if (piece >= 16)
-                        {
-                            char2 = _pieceToChar(piece >> 4);
-                        }
-                    }
+                    int index = Logic::coordsToIndex(i, j);
+                    char char1 = _indexToChar(pieces, index, false);
+                    char char2 = _indexToChar(pieces, index, true);
                     output += char1;
                     output += char2;
                 }
@@ -294,18 +248,9 @@ namespace PijersiEngine
             {
                 for (int j = 0; j < 7; j++)
                 {
-                    char char1 = '.';
-                    char char2 = ' ';
-                    uint8_t piece = cells[Logic::coordsToIndex(i, j)];
-                    if (piece != 0)
-                    {
-                        char1 = _pieceToChar(piece);
-                        // If the piece is a stack
-                        if (piece >= 16)
-                        {
-                            char2 = _pieceToChar(piece >> 4);
-                        }
-                    }
+                    int index = Logic::coordsToIndex(i, j);
+                    char char1 = _indexToChar(pieces, index, false);
+                    char char2 = _indexToChar(pieces, index, true);
                     output += char1;
                     output += char2;
                 }
@@ -315,12 +260,10 @@ namespace PijersiEngine
         return output;
     }
 
-
-
     // Returns true if the board is in a winning position
     bool Board::checkWin()
     {
-        return Logic::isWin(cells);
+        return Logic::isWin(pieces);
     }
 
     int16_t Board::getForecast()
@@ -328,10 +271,10 @@ namespace PijersiEngine
         return forecast;
     }
 
-    vector<int> Board::ponderMCTS(int seconds, int simulationsPerRollout)
-    {
-        return MCTS::ponderMCTS(seconds, simulationsPerRollout, cells, currentPlayer);
-    }
+    // vector<int> Board::ponderMCTS(int seconds, int simulationsPerRollout)
+    // {
+    //     return MCTS::ponderMCTS(seconds, simulationsPerRollout, pieces, currentPlayer);
+    // }
 
     // Plays a move and returns it
     vector<int> Board::playMCTS(int seconds, int simulationsPerRollout)
@@ -342,6 +285,5 @@ namespace PijersiEngine
         playManual(move);
         return move;
     }
-
 
 }
